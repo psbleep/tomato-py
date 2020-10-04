@@ -1,5 +1,7 @@
 import click
 
+from copy import copy
+
 from tomato_py import TOMATO_PY_STATE_FILE
 
 from tomato_py import messages
@@ -48,9 +50,10 @@ def reset(ctx):
 @cli.command()
 def daemon():
     while True:
-        state = util.load_state(state_file=TOMATO_PY_STATE_FILE)
-        state = util.run_daemon(state)
-        util.save_state_file(state)
+        orig_state = util.load_state(state_file=TOMATO_PY_STATE_FILE)
+        state = util.run_daemon(copy(orig_state))
+        if state != orig_state:
+            util.save_state_file(state)
 
 
 if __name__ == "__main__":
