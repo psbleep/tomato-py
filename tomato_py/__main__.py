@@ -37,7 +37,7 @@ def next(ctx):
 @click.pass_context
 def skip(ctx):
     next_step = util.get_next_step(ctx.obj)
-    util.skip_step(next_step, state=ctx.obj)
+    util.complete_step(next_step, state=ctx.obj)
     click.echo(messages.skip_step(next_step))
 
 
