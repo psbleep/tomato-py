@@ -2,7 +2,6 @@ import functools
 import json
 import os
 import subprocess
-import time
 
 import click
 
@@ -117,12 +116,10 @@ def complete_step(step, state):
 
 def run_daemon(state):
     if not state["active_step"]:
-        time.sleep(1)
         return state
     delay = (state["step_ends"] - datetime.utcnow()).total_seconds()
-    if delay < 0:
-        delay = 0
-    time.sleep(delay)
+    if delay > 0:
+        return state
     subprocess.run(
         ["mpv", os.path.join(os.path.dirname(__file__), "alert.mp3")],
         stdout=subprocess.PIPE,

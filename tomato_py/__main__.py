@@ -1,3 +1,5 @@
+import time
+
 import click
 
 from copy import copy
@@ -50,6 +52,7 @@ def reset(ctx):
 @cli.command()
 def daemon():
     while True:
+        time.sleep(5)
         orig_state = util.load_state(state_file=TOMATO_PY_STATE_FILE)
         state = util.run_daemon(copy(orig_state))
         if state != orig_state:

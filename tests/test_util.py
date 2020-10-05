@@ -107,8 +107,7 @@ def test_complete_step_long_break():
     assert util.complete_step(util.steps.LONG_BREAK, state) == util.get_default_state()
 
 
-def test_run_daemon(mocker, freezer):
-    time_sleep = mocker.patch("time.sleep")
+def test_run_daemon_active_step_not_complete(mocker, freezer):
     subprocess_run = mocker.patch("subprocess.run")
     notify = mocker.patch("gi.repository.Notify.Notification.new")
 
@@ -118,23 +117,39 @@ def test_run_daemon(mocker, freezer):
         "work_periods": 0,
     }
     assert util.run_daemon(state) == {
+        "active_step": util.steps.WORK_PERIOD,
+        "step_ends": datetime.utcnow() + timedelta(seconds=10),
+        "work_periods": 0,
+    }
+
+    subprocess_run.assert_not_called()
+    notify.assert_not_called()
+
+
+def test_run_daemon_active_step_is_complete(mocker, freezer):
+    subprocess_run = mocker.patch("subprocess.run")
+    notify = mocker.patch("gi.repository.Notify.Notification.new")
+
+    state = {
+        "active_step": util.steps.WORK_PERIOD,
+        "step_ends": datetime.utcnow() - timedelta(seconds=10),
+        "work_periods": 0,
+    }
+    assert util.run_daemon(state) == {
         "active_step": None,
         "step_ends": None,
         "work_periods": 1,
     }
 
-    time_sleep.assert_called_with(10)
     subprocess_run.assert_called()
     notify.assert_called()
 
 
 def test_run_daemon_no_active_step(mocker):
-    time_sleep = mocker.patch("time.sleep")
     subprocess_run = mocker.patch("subprocess.run")
     notify = mocker.patch("gi.repository.Notify.Notification.new")
 
     state = {"active_step": None}
     assert util.run_daemon(state) == state
-    time_sleep.assert_called_with(1)
     subprocess_run.assert_not_called()
     notify.assert_not_called()
