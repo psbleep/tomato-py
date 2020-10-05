@@ -1,5 +1,13 @@
 import os
 
+from gi import require_version
+
+require_version("Notify", "0.7")
+
+from gi.repository import Notify
+
+Notify.init("tomato-py")
+
 
 TOMATO_PY_STATE_FILE = os.environ.get(
     "TOMATO_PY_STATE_FILE",

@@ -10,6 +10,8 @@ from copy import deepcopy
 from datetime import datetime, timedelta
 from types import SimpleNamespace
 
+from gi.repository import Notify
+
 from tomato_py import TOMATO_PY_STATE_FILE
 
 
@@ -126,4 +128,5 @@ def run_daemon(state):
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
+    Notify.Notification.new("{} completed".format(state["active_step"])).show()
     return complete_step(state["active_step"], state)
