@@ -65,8 +65,8 @@ def test_get_status_msg(freezer):
     }
     assert util.get_status_msg(
         state
-    ) == "Pomodoros: 1\nShort Breaks: 2\nRunning: Pomodoro -> {}".format(
-        datetime.utcnow() + timedelta(minutes=5)
+    ) == "Pomodoros: 1\nShort Breaks: 2\nRunning: Pomodoro -> {} [{} seconds]".format(
+        datetime.utcnow() + timedelta(minutes=5), 300
     )
 
 

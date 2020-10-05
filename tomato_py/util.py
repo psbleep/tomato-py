@@ -74,7 +74,10 @@ def get_status_msg(state):
     )
 
     if active_step_exists:
-        msg += "Running: {} -> {}".format(next_step, state["step_ends"])
+        delay = int((state["step_ends"] - datetime.utcnow()).total_seconds())
+        msg += "Running: {} -> {} [{} seconds]".format(
+            next_step, state["step_ends"], delay
+        )
     else:
         msg += "Next: {}".format(next_step)
 
