@@ -32,18 +32,18 @@ def next(ctx):
     click.echo(messages.run_step(next_step))
 
 
-@util.save_state
 @cli.command()
 @click.pass_context
+@util.save_state
 def skip(ctx):
     next_step = util.get_next_step(ctx.obj)
     util.complete_step(next_step, state=ctx.obj)
     click.echo(messages.skip_step(next_step))
 
 
-@util.save_state
 @cli.command()
 @click.pass_context
+@util.save_state
 def reset(ctx):
     ctx.obj = util.get_default_state()
     click.echo("Resetting tomato-py state.")
