@@ -1,12 +1,14 @@
 import os
+import sys
 
-from gi import require_version
+if sys.platform == "linux" or sys.platform == "linux2":
+    from gi import require_version
 
-require_version("Notify", "0.7")
+    require_version("Notify", "0.7")
 
-from gi.repository import Notify
+    from gi.repository import Notify
 
-Notify.init("tomato-py")
+    Notify.init("tomato-py")
 
 
 TOMATO_PY_STATE_FILE = os.environ.get(
