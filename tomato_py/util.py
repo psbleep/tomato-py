@@ -128,7 +128,11 @@ def run_daemon(state):
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
+    notification_msg = "{} completed".format(state["active_step"])
     if sys.platform in ("linux", "linux2"):
         from gi.repository import Notify
-        Notify.Notification.new("{} completed".format(state["active_step"])).show()
+        Notify.Notification.new(notification_msg).show()
+    else:
+        import pync
+        pync.notify(notification_msg)
     return complete_step(state["active_step"], state)

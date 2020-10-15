@@ -112,6 +112,8 @@ def test_run_daemon_active_step_not_complete(mocker, freezer):
     subprocess_run = mocker.patch("subprocess.run")
     if sys.platform in ("linux", "linux2"):
         notify = mocker.patch("gi.repository.Notify.Notification.new")
+    else:
+        notify = mocker.patch("pync.notify")
 
     state = {
         "active_step": util.steps.WORK_PERIOD,
@@ -125,14 +127,16 @@ def test_run_daemon_active_step_not_complete(mocker, freezer):
     }
 
     subprocess_run.assert_not_called()
-    if sys.platform in ("linux", "linux2"):
-        notify.assert_not_called()
+    notify.assert_not_called()
 
 
 def test_run_daemon_active_step_is_complete(mocker, freezer):
     subprocess_run = mocker.patch("subprocess.run")
     if sys.platform in ("linux", "linux2"):
         notify = mocker.patch("gi.repository.Notify.Notification.new")
+    else:
+        notify = mocker.patch("pync.notify")
+
 
     state = {
         "active_step": util.steps.WORK_PERIOD,
@@ -146,17 +150,17 @@ def test_run_daemon_active_step_is_complete(mocker, freezer):
     }
 
     subprocess_run.assert_called()
-    if sys.platform in ("linux", "linux2"):
-        notify.assert_called()
+    notify.assert_called()
 
 
 def test_run_daemon_no_active_step(mocker):
     subprocess_run = mocker.patch("subprocess.run")
     if sys.platform in ("linux", "linux2"):
         notify = mocker.patch("gi.repository.Notify.Notification.new")
+    else:
+        notify = mocker.patch("pync.notify")
 
     state = {"active_step": None}
     assert util.run_daemon(state) == state
     subprocess_run.assert_not_called()
-    if sys.platform in ("linux", "linux2"):
-        notify.assert_not_called()
+    notify.assert_not_called()
